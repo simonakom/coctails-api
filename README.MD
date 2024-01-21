@@ -16,7 +16,3 @@ Main tasks:
 
 
 
-
-
-
-

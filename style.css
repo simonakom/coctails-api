@@ -2,7 +2,7 @@
 body {
     font-family: 'Cormorant SC', serif;
     margin: 0;
-    background-color: #27273b 
+    background-color: #27273b;
 }
 nav {
     background-image: linear-gradient(0deg, #27273b 0%, #101015 100%);
@@ -14,13 +14,14 @@ nav {
     align-items: center;
 }
 .coctail {
-    width: 6%;
+    width: 10%;
+    filter: brightness(0) invert(1);
 }
 .title{
     color: antiquewhite;
     font-size: 40px;
     text-align: center;
-    margin: 0;
+    margin-bottom: 20px;
 }
 .gradient_one {
     border: none;
@@ -41,11 +42,11 @@ nav {
     max-width: 1200px;
     margin:0 auto;
     padding: 0 50px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    overflow: hidden !important;
 }
 #coctail-name-filter, #category-select, #glass-type-select, #ingredient-select {
     background-color: #c0b1c381;
@@ -167,23 +168,23 @@ nav {
 }
 /*  Modal Window */
 .modal-bg {
-    /* nebus problemu su scroll - goes on top of page */
-    position:fixed;
+    /*  no problem with scroll - goes to the top of the page */
+    position:fixed; 
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, .6);
-    /* kad modal window butu per viduri */
+    /* so that the modal window is in the middle */
     display: flex;
     justify-content: center;
     align-items: center;
-    /* z-index: kad hr nebutu on top of modal */
+    /* z-index: so hr is not on top of modal */
     z-index: 1;
-    /* paslepti modal kai puslapis atidaromas */
+    /* hide modal when page opens */
     display: none;
 }
-/* modal klase neveikia su bootstrap */
+/* modal class not working with bootsrap */
 .modal-w {
-    /* kad butu galima x mygtuka pozicijonuoti su position:absolut */
+    /* to position the x button with position:absolute */
     position: relative;
     background-image: linear-gradient(0deg, #413d4c 0%, #1b191e 100%);
     color: antiquewhite;
@@ -191,7 +192,7 @@ nav {
     max-height: 600px;
     box-shadow: 1px 1px 20px rgba(164, 200, 232, 0.539);
     overflow-y: scroll ;
-    /* kad close button butu per viduri */
+    /* so close button would be in the middle */
     display: flex;
     align-items: center;  
     flex-direction: column;  
@@ -202,10 +203,10 @@ nav {
     justify-content: center;
 }
 .modal-img {
-    /* kad nuotrauka butu per viduri */
-        margin: 0 auto;
-        display: block;
-        width: 80%;
+/* photo in the middle */
+    margin: 0 auto;
+    display: block;
+    width: 80%;
 }
 .modal-close-button-x {
     position: absolute;
@@ -220,7 +221,7 @@ nav {
     font-size: 20px;
     color: #d0c3b8;
 }
-.modal-close-button:hover,  .modal-close-button-x:hover {
+.modal-close-button:hover, .modal-close-button-x:hover {
     transform: scale(1.1);
     transition: transform 0.3s ease-in-out;
     color:  #ffbbff;
@@ -239,7 +240,7 @@ nav {
 .height {
     line-height: 14px;
 }
-/* recipe text align */
+/* alig text of recipe */
 .justify-text {
     text-align: justify;
 }
@@ -251,7 +252,6 @@ nav {
 }
 .dark {
     color:  #b08ab0;
-    text-shadow: 1px 1px 6px rgba(250, 235, 215, 0.405); 
 }
 #modal-alcohol {
     color:  #fe9efe;
@@ -265,6 +265,9 @@ nav {
 }
 /*  Responsive */
 @media only screen and (max-width: 1137px) {
+    .coctail {
+        width: 16%;
+    }
     .modal-w {
         margin: 0 50px;
     }
@@ -274,6 +277,9 @@ nav {
     }
 }
 @media only screen and (max-width: 985px) {
+    .coctail {
+        width: 17%;
+        }
     .modal-w {
         overflow-y: scroll ;
         height: 80%;
@@ -294,49 +300,65 @@ nav {
     }
     .alphabet-letters, .alphabet-numbers {
         gap: 10px;
-        margin: 0 50px;
     }
 }
 @media only screen and (max-width: 860px) {
-.coctail {
-    width: 12%;
-    margin-top: 20px;
-    }
-.inputs {
-    flex-direction: column;
-    align-items: center; 
-    width: 80%;
-    }
-.buton {
-    width: 70%;
-    }
-.drinks {
-    grid-template-columns:1fr 1fr;
-    }    
-.container {
-    padding: 0 50px;
-    } 
+    .coctail {
+        width: 19%;
+        margin-top: 20px;
+        }
+    .inputs {
+        flex-direction: column;
+        align-items: center; 
+        width: 80%;
+        }
+    .buton {
+        width: 75%;
+        overflow: hidden;
+        }
+    .drinks {
+        grid-template-columns:1fr 1fr;
+        }    
+    .container {
+        padding: 0 50px;
+        } 
 
-.drink .drink-title{
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    padding: 20px 30px 10px 30px;
-    }   
-.alphabet-letters, .alphabet-numbers {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    }     
+    .drink .drink-title{
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        padding: 20px 30px 10px 30px;
+        }   
+    .alphabet-letters, .alphabet-numbers {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        }     
+}
+@media only screen and (max-width: 690px) {  
+    .coctail {
+        width: 23%;
+    }
+    .title {
+        font-size: 30px;
+    }
 }
 @media only screen and (max-width: 630px) {  
     .coctail {
-        width: 15%;
+        width: 24%;
         margin-top: 20px;
     }
     .drinks {
         grid-template-columns:1fr;
         width: 80%;
     }  
+}
+@media only screen and (max-width: 400px) {  
+    .coctail {
+        width: 30%;
+    }
+    .title {
+        font-size: 25px;
+    }
 }

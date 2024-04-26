@@ -1,11 +1,10 @@
+# <span><img src="./images/drink.png" alt=coctail style="height: 1em; vertical-align: middle;"></span> Cocktail recipe app
 
-# Cocktail recipe app
-
-Application is developed using javascript and bootstrap to practice API. All API used from -  <a href="https://www.thecocktaildb.com/api.php" style="font-size:small;">TheCoctailDB</a>
+Responsive application is developed using javascript and bootstrap to practice API. All API used from -  <a href="https://www.thecocktaildb.com/api.php" style="font-size:small;">TheCoctailDB</a>
 
 Main tasks:
 <br>• Filtering function:by category, glass, ingredients
-<br>• "Challenge" button
+<br>• "Challenge" button: random coctail receipe
 <br>• Modal window
 <br>• Filter alcoholic/non-alcoholic drinks
 <br>• Filter by first letter

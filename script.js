@@ -1,14 +1,14 @@
 //TO-DO:
-//1. Selectu uzpildymas duomenimis ---------------------------> ✓ (functions fillSelectElements + fillSelect)
-//2. Gauname visus gerimus is API ----------------------------> ✓ (function getAllDrinks)
-//3. Juos atvaizduojame --------------------------------------> ✓ (function generateDrinksHTML)
-//4. Atlikti filtracijas kokteiliams (selects) ---------------> ✓ (function filter)
-    //4.1. Filtracija: Paieska pagal pavadinima --------------> ✓ (searchValue)
-//5. Modalinio lango sukurimas -------------------------------> ✓ (functions openModal/generateModalContent)
-//6. Modalinio lango uzdarymas -------------------------------> ✓ (functions closeModal/EscapeKey) (esc key+2 buttons+background)
-//7. Atsitiktinio kokteilio gavimas su mygtuku "Challenge" ---> ✓ (functions randomCoctail)
+//1. Full selects with data -----------------------------> ✓ (functions fillSelectElements + fillSelect)
+//2. Get all drinks from  API ---------------------------> ✓ (function getAllDrinks)
+//3. Drinks displayed -----------------------------------> ✓ (function generateDrinksHTML)
+//4. Filtering for drinks (selects) ---------------------> ✓ (function filter)
+    //4.1. Filtering: serach by the name ----------------> ✓ (searchValue)
+//5. Modal window ---------------------------------------> ✓ (functions openModal/generateModalContent)
+//6. Modal window closing -------------------------------> ✓ (functions closeModal/EscapeKey) (esc key+2 buttons+background)
+//7. Random coctail with button "Challenge" -------------> ✓ (functions randomCoctail)
 
-const selectValues = {}; console.log(selectValues);  // objektas kuriam bus priksirti 3 laukai is "fillSelectElements" funkcijos
+const selectValues = {}; console.log(selectValues);  //  object to which 3 fields will be assigned from the "fillSelectElements" function
 const drinksArray = []; console.log(drinksArray);
 
 const coctailNameFilterElement = document.querySelector("#coctail-name-filter"),
@@ -39,67 +39,67 @@ modalRecipe = document.querySelector ("#modal-recipe"),
 
 alphabetContainer = document.getElementById('alphabet-letters');
 
-async function fillSelectElements (){  //Visi Fetchai apdorojami veinu metu (greitesnis apdorojimo budas)
-const allUrls = [ //Gauname visus "promise" i viena masyva
+async function fillSelectElements (){  //All Fetch processed at the same time (faster processing)
+const allUrls = [ //Get all "promise" to one array
     "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list",
     "https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list", 
     "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list"
     ];
-    const allPromises = allUrls.map((url) => fetch(url).then((response) => response.json())); //Kiekvienam url atliekamas fetch + parsing pasunaudojant vienu masyvu "allUrls" ir map metodu (pasiema visus linkus ir pakeicia)
-    console.log(allPromises); // Gauname array su 3 "uzbaigtais" promises (bet dar neturime ju reiksmiu)
-    const allValues = await Promise.all(allPromises); //Kiekvieno promise reiksmes gausime su "promise.all" metodu. Prisideda await - to wait for promises to come true. Veliau allValues leis prieiti prie reiksmiu is API.
-    console.log(allValues); // Gauname Array su 3 elementais: 1 - categories 2 - glass 3 - ingredients.
+    const allPromises = allUrls.map((url) => fetch(url).then((response) => response.json())); //For each url fetch is done + parsing is performed using one array "allUrls" and the map method (gets all links and changes them)
+    console.log(allPromises); //receive an array with 3 "completed" promises (but we don't have their values yet)
+    const allValues = await Promise.all(allPromises); //value of each promise is obtained with the "promise.all" method. Is added await - to wait for promises to come true. Then allValues will allow to access the values from the API.
+    console.log(allValues); //We get an Array with 3 elements: 1 - categories 2 - glass 3 - ingredients.
 
-    // Atspindime 3 elementus 3 skirtinguose Array (using destructuring assignment):
+    //Reflect 3 elements in 3 different arrays (using destructuring assignment):
     const [allCategories, allGlasses, allIngredients] = allValues; 
     console.log(allCategories); console.log(allGlasses); console.log(allIngredients);
 
-    //Kad kitamuosisu veliau panaudoti, reikia iskelti is funkcijos (sukurti objekta (selectValues) kuriam bus priksirti 3 laukai)
-    selectValues. categories = allCategories.drinks.map(categoryObj=>categoryObj.strCategory) //pridedam drinks ir "categories" tampa objektu masyvas(vietoj object+object+array). Kad nebutu nereikalingo objekto viduje masyvo, naudojam "map"(kad gauti tik kategoriju reiksmes be paties objekt "strCategory")
-    selectValues.glasses = allGlasses.drinks.map(glass=>glass.strGlass) //visi glasses vienam masyve
-    selectValues.ingredients = allIngredients.drinks.map(ingredients=>ingredients.strIngredient1) //visi ingridientai vienam masyve
+    //To use later variables, is needed to load them from a function (create an object (selectValues) to which 3 fields will be assigned)
+    selectValues. categories = allCategories.drinks.map(categoryObj=>categoryObj.strCategory) //add drinks and "categories" becomes an array of objects (instead of object+object+array). To avoid unnecessary object inside the array, we use "map"(to get only the category values without the "strCategory" object itself)
+    selectValues.glasses = allGlasses.drinks.map(glass=>glass.strGlass) //all glasses in one array
+    selectValues.ingredients = allIngredients.drinks.map(ingredients=>ingredients.strIngredient1) //all ingredients in one array
     console.log(selectValues); 
 
-    //kad suveiktu selectai (vietoj response.drinks pakeisti i nauja gauta reiksme allCategories.drinks)
+    //to make the selects work (replace response.drinks with new value allCategories.drinks)
     fillSelect(allCategories.drinks, categorySelectElement, "strCategory");
     fillSelect(allGlasses.drinks, glassSelectElement, "strGlass");
     fillSelect(allIngredients.drinks, ingredientSelectElement, "strIngredient1");
 }
 
-function fillSelect(properties, selectElement, strFieldName ){ //Uzpildo visus select su options pagal parametrus
+function fillSelect(properties, selectElement, strFieldName ){ //Fills all select with options according to parameters
     let dynamicHTML = '';
     for(const property of properties){
         // console.log(selectValues.categories); 
         dynamicHTML += `<option>${property[strFieldName]}</option>`;
     }
-    selectElement.innerHTML += dynamicHTML; //"+" prideti kartu tai kas yra html
+    selectElement.innerHTML += dynamicHTML; //"+"  add together what is in html
 }
 
-// funkcija kuri iskvies visus gerimus is API, kai gerimai bus gauti viename masyve  - bus daromas atvaizdavimas
+// a function that will call all the drinks from the API, when the drinks will be in one array - reflection will be done
 async function getAllDrinks(){ // https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Ordinary_Drink
-    const categoryDrinksUrls =  []; //masyvas uzpildomas ciklo eigoje
-    for (const category of selectValues.categories){ //Cikle einame per visas turimas kategorijas "selectValues.categories"
-        let dynamicUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category.replaceAll(" ", "_")}`; //Dinaminis url generuojamas kiekvienai kategorijai
-        categoryDrinksUrls.push(dynamicUrl); //dinaminis url atsiranda tusciame masyve tam kad galeitume daryri promise.all
+    const categoryDrinksUrls =  []; //the array is filled during the cycle
+    for (const category of selectValues.categories){ //Loop through all available categories in "selectValues.categories"
+        let dynamicUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category.replaceAll(" ", "_")}`; //Dynamic url generated for each category
+        categoryDrinksUrls.push(dynamicUrl); //dynamic url appears in the empty array in order to be able to do promise.all
     }
-    const allPromises = categoryDrinksUrls.map((url) => fetch(url).then(response => response.json())); //Kiekvienam url atliekamas fetch + parsing pasunaudojant vienu masyvu "categoryDrinksUrls" ir map metodu (pasiema visus linkus ir pakeicia)
-    const allValues = await Promise.all(allPromises) //Kiekvieno promise reiksmes gausime su "promise.all" metodu. Prisideda await - to wait for promises to come true. Veliau allValues leis prieiti prie reiksmiu is API.
+    const allPromises = categoryDrinksUrls.map((url) => fetch(url).then(response => response.json())); //For each url, fetch is done + parsing by using a single array "categoryDrinksUrls" and the map method (takes all links and changes them)
+    const allValues = await Promise.all(allPromises) //Value of each promise is obtained with the "promise.all" method. Adds await - to wait for promises to come true. Then allValues will allow to access the values from the API.
 
     console.log(categoryDrinksUrls);
     console.log(allPromises);
-    console.log(allValues); //pagal kiekvina kategorija gerimus gauname kaip atskirus objektus
+    console.log(allValues); //under each category, we get drinks as separate objects
 
-//kiekviena is gerimu objektu (kiekviena gerima) reikia issitraukti ir ideti i "drinksArray" masyva. Riekia iteruoti per keiviena objekta kuris yra masyve "allValues" pasunaudojant "forEach"
+//Each of the drink objects (each drink) has to be extracted and placed in the "drinksArray" array. Is needed to iterate through each object that is in "allValues" array using "forEach"
     allValues.forEach((value) => drinksArray.push(...value.drinks))
-    //sukame cikla per kiekviena reiksme + callback funkcija pasakys kas atsitiks kiekvineo ciklo eigoje
-    //(value) - kiekvineos reiksmes reiksme (vienas gerimu masyvas objekte). Kiekvienoje iteracijoje gauname viena eilute: po viena objekta kuriame yra masyvas ir tas objektas yra (value)
-    // pushinti - isspredinti masyvo reiksme istraukta is objekto      
+    //loop through each value + the callback function will tell what will happen during the each loop circle
+    //(value) - the meaning of each value (one drinks array in object). In each iteration we get one row: one object containing the array and that object is (value)
+    // pushinti - to spread (...) value of array extracted from object
 }
 
-function generateDrinksHTML(drinks){  //dinaminis atvaizdavimas
+function generateDrinksHTML(drinks){  //dynamic rendering
     let dynamicHTML = "";
-    for(let drink of drinks){ //iteruojama per kiekviena gerima
-        //pakeiciami laukai yra pemami is "drinksArray"
+    for(let drink of drinks){ //iterated through each drink
+        //the fields to be replaced are taken from "drinksArray"
         dynamicHTML += `   
         <div class="drink" onclick="openModal(${drink.idDrink})">
             <img src="${drink.strDrinkThumb}" alt="Coctail photo">
@@ -110,76 +110,75 @@ function generateDrinksHTML(drinks){  //dinaminis atvaizdavimas
     dynamicDrinksElement.innerHTML = dynamicHTML; 
 }
 
-// Async nes filtracijos metu kreipsimes i API kad gauti gerimus pagal pateiktus filtrus (lokali filtracija kai nurodytas gerimo pavadinimas bet kai nurodyti selectai kreipiamasi i API )
-async function filter (event){  //parametru nera nes juos gausim is select inputu. Funkcija suveikia tik kai paspaudziamas mygtukas
-    const searchValue = coctailNameFilterElement.value, //is pirmo filtruos pagal name ir poto ziures pagal selectus
+// Async because during filtration  will call the API to get the drinks according to the given filters (local filtration when the name of the drink is specified but when the selects are specified the API is called)
+async function filter (event){  //there are no parameters because we get them from select inputs. The function is triggered only when the button is pressed
+    const searchValue = coctailNameFilterElement.value, //first filter by name and then filter by selects
             category =  categorySelectElement.value,
             glass = glassSelectElement.value,
             ingredient = ingredientSelectElement.value;
         console.log(searchValue, category, glass, ingredient);
 
-    let filteredArray = [...drinksArray] //daorme drinksArray (visu gerimu) kopija ir jame vyks filtracija  
-    console.log(filteredArray);// matomi visi 412 gerimai
+    let filteredArray = [...drinksArray] //make a copy of  drinksArray (all drinks) and in that will happen filtering
+    console.log(filteredArray);//all 412 drinks are visible
 
-    if(searchValue){ //jei searchValue egzistuoja, tada vyksta filtracija
+    if(searchValue){ //if searchValue exists, then filtration takes place
     filteredArray = filteredArray.filter((drinkObj) => drinkObj.strDrink.toLowerCase().includes(searchValue.toLowerCase())) //filtro viduje yra callback funkcija kuri grazina true (paliekama reiksme) arba false reiksme (objektas pasalinamas is masyvo)
     } 
-    console.log(filteredArray); // matomi isfiltruoti gerimai tik pagal pirma laukeli(pavadinima)
+    console.log(filteredArray); //filtered drinks are visible only by the first field (name)
 
     if (category !== "Select Category..."){
-    // 1. Is API gauname (fetch) gerimus pagal pasirinkta kategorija 
-    // 2. Gauti gerimai turi id. Tikrinti аr "filteredArray" gerimu id egzistuoja bet viename is gautu fetcho "drinksOfCategory" gerimu. 
-    // 3. Jei egzistuoja - reiksme paliekama "filteredArray" masyve (nes pasirinktoje kategorijoje jau egzistuoja toks gerimas su tokiu id)
-    // 4. Jei NEegzistuoja - reiksme pasalinama is "filteredArray" masyvo
-    console.log(category); // matome category name "string"
+    // 1. From the API we fetch drinks according to the selected category 
+    // 2. Recived drinks have an id. Check whether "filteredArray" drinks id exists in any of received "drinksOfCategory" drinks fetching.
+    // 3. If it exists, the value is left in the "filteredArray" array (because such a drink with this id already exists in the selected category)
+    // 4. If it does NOT exist, the value is removed from the "filteredArray" array
+    console.log(category); //see category name "string"
 
     const promise = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category.replaceAll(" ", "_")}`); //pakeiciamas kategorijos pavadinimas. Awaite leidzia palaukti promise 
-    const drinksOfCategory = await promise.json(); // is promise parsinami patys duomenys
-    console.log(drinksOfCategory); // rezultatas: yra grazinamas masyvas su gerimu pavadinimais pagal tam tikra kategorija 
+    const drinksOfCategory = await promise.json(); // from promise data is being parsed
+    console.log(drinksOfCategory); // Result: an array with the names of the drinks under a given category is retrieved ]
 
-    // Sukamas ciklas per visus gerimus "filteredArray" masyve
-    // Einama per kiekviena "drinksOfCategory" objekto reiksme (jau isfiltruota masyva) ir tikrinama ar sutampa jo id su id is "filteredArray"
-    // Some metodas grazins true(reiksme paliekama masyve)/false (reiksme pasalinama is masyvo) reiksme. Jo viduje tikrinama ar bet vineas "drinksOfCategory" atitinka kriteriju = id yra toks pats kaip einamojo gerimo  "drink" id. 
-    // filtro tikslas: istikinti kad gerimas egzistuoja abejuose masyvuose ir ji palikti
-    // Masyvo metodas masyvo metode: (drink) - isfiltruoto masyvo gerimas / einamoji reiksme / value
+    // Loop through all drinks in the "filteredArray" array
+    // Goes through each of the "drinksOfCategory" object's value (already filtered array) and checks if its id matches the id from "filteredArray"
+    // "Some" method will return true(the value is left in the array)/false (the value is removed from the array). Inside it checking if at least one "drinksOfCategory" matches the criteria = id is the same as the id of the current drink "drink". 
+    // Array method in array method: (drink) - drink from filtered array / current value / value
     filteredArray = filteredArray.filter((drink) => drinksOfCategory.drinks.some((drinksOfCategory) => drink.idDrink === drinksOfCategory.idDrink));
-        // .filter - išfiltruoja tuos elementus, kurie callback funkcijoje returnina false reikšmę. Gražina išfiltruotą masyvą;
-        // .some - tikrina, ar bent vienas laukelis masyve atitinka kriterijų, jei taip - gražina true, kitu atveju false;
+        // .filter - filters out those elements that return false in the callback function. Gives back the filtered array;
+        // .some - checks if at least one field in the array matches the criteria, if so - returns true, otherwise false;
     }   
-    console.log(filteredArray); // matomi isfiltruoti gerimai tik pagal 1-2 laukelius
+    console.log(filteredArray); //  filtered drinks are only visible by 1-2 fields
 
     if (glass !== "Select Glass Type..."){
-    console.log(glass); // matome glass name "string"
+    console.log(glass); // see glass name "string"
 
     const promise = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?g=${glass.replaceAll(" ", "_")}`); //pakeiciamas glass pavadinimas. Awaite leidzia palaukti promise 
-    const drinksOfGlass = await promise.json(); // is promise parsinami patys duomenys
-    console.log(drinksOfGlass); // rezultatas: yra grazinamas masyvas su gerimu pavadinimais pagal glass
+    const drinksOfGlass = await promise.json(); // the data itself is parsed from the promise
+    console.log(drinksOfGlass); // Result: an array with the names of the drinks is returned under glass type
 
     filteredArray = filteredArray.filter((drink) => drinksOfGlass.drinks.some((drinksOfGlass) => drink.idDrink === drinksOfGlass.idDrink));
     }
-    console.log(filteredArray); // matomi isfiltruoti gerimai pagal 1-2-3 laukelius
+    console.log(filteredArray); // filtered drinks by fields 1-2-3 are visible
 
     if (ingredient !== "Select Ingredient..."){           
-    console.log(ingredient); // matome glass name "string"
+    console.log(ingredient); // see glass name "string"
 
     const promise = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredient.replaceAll(" ", "_")}`); //pakeiciamas ingredient pavadinimas. Awaite leidzia palaukti promise 
-    const drinksOfIngredient = await promise.json(); // is promise parsinami patys duomenys
-    console.log(drinksOfIngredient); // rezultatas: yra grazinamas masyvas su gerimu pavadinimais pagal ingredient
+    const drinksOfIngredient = await promise.json(); // the data itself is parsed from the promise
+    console.log(drinksOfIngredient); //  Result: an array with the names of the drinks is returned under ingredient type
 
     filteredArray = filteredArray.filter((drink) => drinksOfIngredient.drinks.some((drinksOfIngredient) => drink.idDrink === drinksOfIngredient.idDrink));
     }
-    console.log(filteredArray); // matomi isfiltruoti gerimai pagal 1-2-3-4 laukelius
+    console.log(filteredArray); //filtered drinks by fields 1-2-3-4 are visible
 
-    generateDrinksHTML(filteredArray); //kad atvaizduoti filtracijos rezultata reikia iskviesti "generateDrinksHTML" su parametru "filteredArray"
+    generateDrinksHTML(filteredArray); //to display the result of the filtering need to call "generateDrinksHTML" with parameter "filteredArray"
     //noteOfDrinks.style.display = 'none';
     //note.style.display = 'block';
     //buttonReset.style.display = 'none'; 
 
-    // LocalStorage: filtru saugojimas (Pries validation, kitaip neklausys siu nurodymu)
+    // LocalStorage: filter storage (Before validation, otherwise it won't listen these instructions)
     saveFiltersToLocalStorage();
 
-    // Validations: jei joks filtras nepasirinktas
-    // pridedamas event.target.id === 'search' ---> kad veiktu tik kai paspaudziama search button
+    // Validations:  if any filter is selected
+    // is added event.target.id === 'search' ---> o work only when the search button is pressed
     if (event.target.id === 'search' && !coctailNameFilterElement.value && categorySelectElement.value === 'Select Category...' && glassSelectElement.value === 'Select Glass Type...' && ingredientSelectElement.value === 'Select Ingredient...') {
         note.style.display = 'block';
         note.innerText = 'Please, use at least one filter field !';
@@ -191,7 +190,7 @@ async function filter (event){  //parametru nera nes juos gausim is select input
         buttonReset.innerText = 'Reset Filters';
         noteOfDrinks.style.display = 'none';
     }
-        // Jei nera jokiu results po filtering
+        // If there are no results after filtering
     if (filteredArray.length === 0) {
         note.innerText = 'No results found with the selected filters 🥲';
         note.style.display = 'block';
@@ -211,19 +210,19 @@ function reset() {
     glassSelectElement.value = 'Select Glass Type...'; 
     ingredientSelectElement.value = 'Select Ingredient...';
 
-    // Generuoti gėrimų HTML su pradiniu gėrimų masyvu drinksArray
+    // Generate drinks HTML with initial drinks array - drinksArray
     generateDrinksHTML(drinksArray);
     buttonReset.style.display = 'none';
     note.style.display = 'none';
     noteOfDrinks.style.display = 'none';
 
-// LocalStorage: filtru salinimas
+// LocalStorage: removing filters
 localStorage.removeItem('filters');
 }
 
-// atidarymas (kai paspaudziama an nuotraukas): ant kiekvieno gerimo su klase "drink" prideti onclick listener per js funkcija "generateDrinksHTML". Kaip parametra nurodyti id (${drink.idDrink})
-// async- nes reikes daryti palaukima pries atvaizduojant duomenys
-async function openModal (id) { //nurodomas id, nes pagal ji bus gaunami duomenis is API ir atvaizduojami modale
+// opening (when clicking on picture): add an onclick listener on each drink with class "drink" via js function "generateDrinksHTML". As parameter specify is  (${drink.idDrink}) 
+// async- is needed to wait  before displaying the data  
+async function openModal (id) { //the id is specified because it will be used to retrieve data from the API and display it in the modal later
     modalOpen.style.display = "flex";
     const promise = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
     const response = await promise.json();
@@ -246,7 +245,7 @@ function generateModalContent(drink) {
     let ingredients = []; console.log(ingredients);
     let measure = []; console.log(measure);
 
-    // ingredienttu  perkellimas i tuscius masyvus
+    //transfer of ingredients to empty arrays
     for (let i = 1; i <= 15; i++) {
         let ingredient = drink[`strIngredient${i}`];
         let count = drink[`strMeasure${i}`];
@@ -257,8 +256,8 @@ function generateModalContent(drink) {
             measure.push(count);
         }
     }
-    // Suka cikla per keikviena elementa masyve "Ingredients"
-    //let index = 0;: Initialize a variable index to start the loop from the first element of the array.
+    // Loops through each element in the "Ingredients" array
+    // let index = 0;: Initialize a variable index to start the loop from the first element of the array.
     // index < ingredients.length;: Set the condition to continue the loop as long as the index is less than the length of the ingredients array (15).
     //index++: Increment the index after each iteration. (to do another circle)
     for (let index = 0; index < ingredients.length; index++) {
@@ -290,11 +289,11 @@ async function randomCoctail() {
 
 // Link to Alkoholic/nonAlkoholic drinks
 async function drinkAlcoholicOrNonAlcoholic() {
-    const link =  modalAlcohol.innerText; // pasieme reiksme is html: Alkoholic or non alkoholic
+    const link =  modalAlcohol.innerText; // take value from html: Alkoholic or non alkoholic
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=${link.replaceAll(" ","_")}`);
     const object = await response.json();
     const drinks = object.drinks;
-    generateDrinksHTML(drinks); //atvaizduoja Alkoholic/non alkoholic gerimus pagal linka 
+    generateDrinksHTML(drinks); //displaying Alkoholic/non alkoholic drinks by the link
     modalOpen.style.display = "none";
 }
 
@@ -336,14 +335,14 @@ async function displayFirstSymbolDrinks(letter) {
     }
 }
   
-async function initialization (){ //Aprasinejama kas atsitinka pasileidus kodui. Funkcija kuri igalins kitas funkcijas paeiliui kad aplikacija galetu veikti su minimaliais duomenimis. 
-    await fillSelectElements(); //-uzpildomi selectai
-    await getAllDrinks(); //-gaunami visi gerimai i "drinksArray" masyva
+async function initialization (){ //Describes what happens after the code is run. A function that will enable other functions in sequence so that the application can run with minimal data. 
+    await fillSelectElements(); //selectors are filled
+    await getAllDrinks(); //all drinks are fed into the "drinksArray" array
     loadFiltersFromLocalStorage();
-    // generateDrinksHTML(drinksArray); //-gerimu dinaminis atvaizdavimas. Pasleptas nes pridetas "filter" (jame jau yra sita funkcija) -> tada greitesnis atvaizdavimas buna filtru po refresh page ir pirmomis sekundemis nera default atvaizdavimo o iskarto filtruotas atvaizdavimas
+    // Dynamic display of drinks. Hidden because "filter" has been added (it already has this function) -> then is faster rendering of filters after refreshing page and in the first few seconds there is no default rendering but a filtered rendering immediately
     filter();
 
-    buttonSearch.addEventListener('click', filter); //prideti po filtracijos - tada kada butu pareje select values ("filter"-callback funkcija ir ja paduodame kaip kitamaji)
+    buttonSearch.addEventListener('click', filter); //add after filtering - when select values are already there ("filter"-callback function and it is passed as variable)
     buttonReset.addEventListener('click', reset);
     buttonChallenge.addEventListener("click", randomCoctail);
 
@@ -362,20 +361,20 @@ async function initialization (){ //Aprasinejama kas atsitinka pasileidus kodui.
 initialization();
 
 // -------------------LOCAL STORAGE-------------------------------
-//1. Function "saveFiltersToLocalStorage()" -----> Sukurti funkcija kuri issaugo selected filter value to localStorage
-//2. "saveFiltersToLocalStorage()" --------------> panaudoti ten kur filtrai (nes saugom filtrus) ir pries validation !!! (jei po validation tada neklauso tu nurodymu is validation)
-//3. Function "loadFiltersFromLocalStorage()" ---> Sukurti funkcija kuri paims issaugotus filtrus if localStorage
-//4. "loadFiltersFromLocalStorage()"  -----------> paliesti funkcija kartu su funkcija filter "Initalization" viduje. Tada galima istrinti "generateDrinksHTML(drinksArray)" kad butu gretesnis atvaizdavimas 
-//5. kad mygtukas rest veiktu reikia pridet prie "reset" funkcijos ---> localStorage.removeItem('filters');
+//1. Function "saveFiltersToLocalStorage()" -----> Create a function that saves selected filter value to localStorage
+//2. "saveFiltersToLocalStorage()" --------------> to be used where filters are (because we save filters) and before validation !!! (if after validation then it doesn't listen to those instructions from validation)
+//3. Function "loadFiltersFromLocalStorage()" ---> Create a function to retrieve saved filters from localStorage
+//4. "loadFiltersFromLocalStorage()"  -----------> run the function together with the filter function inside "Initalization".Then its possible delete "generateDrinksHTML(drinksArray)" to get a faster display 
+//5. to make the reset button work is need to add to the "reset" function ---> localStorage.removeItem('filters');
 
-// Saugoti selected filter value to localStorage
+// Save selected filter value to localStorage
 function saveFiltersToLocalStorage() {
     localStorage.setItem('coctailNameFilter', coctailNameFilterElement.value);
     localStorage.setItem('categorySelect', categorySelectElement.value);
     localStorage.setItem('glassSelect', glassSelectElement.value);
     localStorage.setItem('ingredientSelect', ingredientSelectElement.value);
 }
-// Uzkrauti selected filters from localStorage
+// Load selected filters from localStorage
 function loadFiltersFromLocalStorage() {
     coctailNameFilterElement.value = localStorage.getItem('coctailNameFilter') || '';
     categorySelectElement.value = localStorage.getItem('categorySelect') || 'Select Category...' ;

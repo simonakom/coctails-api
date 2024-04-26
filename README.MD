@@ -1,4 +1,4 @@
-# <span><img src="./images/drink.png" alt=coctail style="height: 1em; vertical-align: middle;"></span> Cocktail recipe app
+# <span><img src="./images/drink.png" alt=coctail style="height: 1em; vertical-align: middle;"></span> Cocktail receipe app
 
 Responsive application is developed using javascript and bootstrap to practice API. All API used from -  <a href="https://www.thecocktaildb.com/api.php" style="font-size:small;">TheCoctailDB</a>
 

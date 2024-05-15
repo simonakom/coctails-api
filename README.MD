@@ -3,7 +3,7 @@
 Responsive application is developed using javascript and bootstrap to practice API. All API used from -  <a href="https://www.thecocktaildb.com/api.php" style="font-size:small;">TheCoctailDB</a>
 
 Main tasks:
-<br>• Filtering function: by name, type, glass, ingredients, first letter;
+<br>• Filtering function: by name, type, glass, ingredients, first letter
 <br>• Filter alcoholic/non-alcoholic drinks
 <br>• "Challenge" button: random coctail receipe
 <br>• Modal window

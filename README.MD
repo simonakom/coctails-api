@@ -1,6 +1,6 @@
 # <span><img src="./images/coctail.png" alt=coctail style="height: 1em;"></span> Cocktail receipe app
 
-Responsive application is developed using javascript and bootstrap to practice API. All API used from -  <a href="https://www.thecocktaildb.com/api.php" style="font-size:small;">TheCoctailDB</a>
+Responsive coctails application is developed using javascript and bootstrap to practice API. All API used from -  <a href="https://www.thecocktaildb.com/api.php" style="font-size:small;">TheCoctailDB</a>
 
 Main tasks:
 <br>• Filtering function: by name, type, glass, ingredients, first letter

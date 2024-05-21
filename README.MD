@@ -17,7 +17,7 @@ Main tasks:
     <img src="./images/desktop-modal.png" alt="main-page" style="border-radius: 5px; display: inline-block; width: 700px; height: auto;" />
 
 ### Mobile version:
-  <img src="./images/responsive-main.png" alt="responsive-main" style="border-radius: 5px; display: inline-block; width: 700px; height: auto;" />
-    <img src="./images/responsive-modal.png" alt="responsive-modal" style="border-radius: 5px; display: inline-block; width: 700px; height: auto;" />
+  <img src="./images/responsive-main.png" alt="responsive-main" width="300" style="border-radius: 5px;" />
+    <img src="./images/responsive-modal.png" alt="responsive-modal" width="300" style="border-radius: 5px;" />
 </div>
 
